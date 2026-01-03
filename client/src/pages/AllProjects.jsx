@@ -48,9 +48,29 @@ const allProjects = [
   }
 ];
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
+
 const AllProjects = () => {
   return (
-    <div className="bg-dark min-h-screen text-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="bg-dark min-h-screen text-white"
+    >
       <Navbar />
       
       <main className="pt-24 pb-20">
@@ -75,16 +95,23 @@ const AllProjects = () => {
             </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div 
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
             {allProjects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
+              <motion.div key={project.id} variants={item}>
+                <ProjectCard project={project} index={index} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </main>
 
       <Footer />
-    </div>
+    </motion.div>
   );
 };
 

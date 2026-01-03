@@ -8,10 +8,17 @@ import Testimonials from '../components/Testimonials'
 import Blogs from '../components/Blogs'
 import Contact from '../components/Contact'
 import Footer from '../components/Footer'
+import { motion } from 'framer-motion'
 
 const LandingPage = () => {
   return (
-    <div className="bg-dark min-h-screen text-white selection:bg-primary/30 selection:text-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-dark min-h-screen text-white selection:bg-primary/30 selection:text-white"
+    >
       <Navbar />
       <main>
         <section id="home">
@@ -40,7 +47,7 @@ const LandingPage = () => {
         </section>
       </main>
       <Footer />
-    </div>
+    </motion.div>
   )
 }
 

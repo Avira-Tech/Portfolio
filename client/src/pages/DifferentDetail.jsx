@@ -52,7 +52,12 @@ const sections = [
 
 const DifferentDetail = () => {
   return (
-    <div className="bg-dark min-h-screen text-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="bg-dark min-h-screen text-white"
+    >
       <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-6 max-w-5xl">
@@ -76,13 +81,13 @@ const DifferentDetail = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-8"
+                className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-8 hover:border-primary/50 transition-colors group"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 rounded-xl bg-primary/10 text-primary border border-primary/20">
+                  <div className="p-3 rounded-xl bg-primary/10 text-primary border border-primary/20 group-hover:scale-110 transition-transform duration-300">
                     {s.icon}
                   </div>
-                  <h2 className="text-2xl font-bold">{s.title}</h2>
+                  <h2 className="text-2xl font-bold group-hover:text-primary transition-colors">{s.title}</h2>
                 </div>
                 <p className="text-gray-300 mb-4">{s.content}</p>
                 <ul className="space-y-2 text-gray-300">
@@ -96,7 +101,7 @@ const DifferentDetail = () => {
         </div>
       </main>
       <Footer />
-    </div>
+    </motion.div>
   );
 };
 

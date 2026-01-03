@@ -51,7 +51,12 @@ const BlogDetail = () => {
   }
 
   return (
-    <div className="bg-dark min-h-screen text-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="bg-dark min-h-screen text-white"
+    >
       <Navbar />
       
       <main className="pt-24 pb-20">
@@ -99,23 +104,24 @@ const BlogDetail = () => {
             </header>
 
             {/* Featured Image */}
-            {blog.image && (
-              <div className="rounded-2xl overflow-hidden mb-12 border border-gray-800">
-                <img src={blog.image} alt={blog.title} className="w-full h-auto object-cover max-h-[500px]" />
-              </div>
-            )}
+            <div className="mb-12 rounded-2xl overflow-hidden border border-white/10">
+              <img 
+                src={blog.image} 
+                alt={blog.title} 
+                className="w-full h-auto object-cover max-h-[500px]"
+              />
+            </div>
 
             {/* Content */}
-            <div 
-              className="prose prose-invert prose-lg max-w-none prose-headings:text-white prose-a:text-primary prose-strong:text-white prose-code:text-primary prose-pre:bg-black/50 prose-pre:border prose-pre:border-gray-800"
-              dangerouslySetInnerHTML={{ __html: blog.content }}
-            />
+            <div className="prose prose-invert prose-lg max-w-none">
+              {/* Render HTML content safely if needed, or simple text */}
+              <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+            </div>
           </motion.div>
         </article>
       </main>
-
       <Footer />
-    </div>
+    </motion.div>
   );
 };
 

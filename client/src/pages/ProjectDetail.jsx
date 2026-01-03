@@ -92,7 +92,12 @@ const ProjectDetail = () => {
   }
 
   return (
-    <div className="bg-dark min-h-screen text-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="bg-dark min-h-screen text-white"
+    >
       <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-6 max-w-5xl">
@@ -101,84 +106,98 @@ const ProjectDetail = () => {
             Back to Projects
           </Link>
 
-          <motion.header
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-10"
           >
-            <h1 className="text-3xl md:text-5xl font-bold mb-4">{project.title}</h1>
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="text-xs font-bold text-primary uppercase tracking-widest border border-primary/30 px-3 py-1 rounded-full bg-primary/10">
-                {project.category}
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {project.tech.map(t => (
-                  <span key={t} className="px-3 py-1 text-xs font-medium bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-white">
-                    {t}
-                  </span>
-                ))}
+            <div className="relative h-[400px] md:h-[500px] w-full rounded-2xl overflow-hidden mb-12 group">
+              <img 
+                src={project.image} 
+                alt={project.title} 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 p-8 md:p-12">
+                <span className="text-primary font-medium tracking-wider uppercase mb-2 block">{project.category}</span>
+                <h1 className="text-4xl md:text-6xl font-bold mb-4">{project.title}</h1>
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((t) => (
+                    <span key={t} className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-sm border border-white/10">
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-          </motion.header>
 
-          {project.image && (
-            <div className="rounded-2xl overflow-hidden mb-10 border border-gray-800">
-              <img src={project.image} alt={project.title} className="w-full h-auto object-cover max-h-[520px]" />
-            </div>
-          )}
+            <div className="grid md:grid-cols-3 gap-12">
+              <div className="md:col-span-2 space-y-8">
+                <div>
+                  <h2 className="text-2xl font-bold mb-4">Overview</h2>
+                  <p className="text-gray-300 leading-relaxed text-lg">
+                    {project.overview}
+                  </p>
+                </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-span-2">
-              <motion.h2
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="text-2xl font-semibold mb-4"
-              >
-                Overview
-              </motion.h2>
-              <p className="text-gray-300 mb-8">{project.overview}</p>
+                <div>
+                  <h2 className="text-2xl font-bold mb-4">Key Highlights</h2>
+                  <ul className="space-y-3">
+                    {project.highlights.map((highlight, index) => (
+                      <motion.li 
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-start gap-3 text-gray-300"
+                      >
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+                        {highlight}
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
 
-              <motion.h3
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-xl font-semibold mb-4"
-              >
-                Highlights
-              </motion.h3>
-              <ul className="space-y-3 text-gray-300">
-                {project.highlights.map((h, i) => (
-                  <li key={i} className="leading-relaxed">• {h}</li>
-                ))}
-              </ul>
-            </div>
+              <div>
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 sticky top-32">
+                  <h3 className="text-xl font-bold mb-6">Project Details</h3>
+                  
+                  <div className="space-y-4 mb-8">
+                    <div>
+                      <span className="block text-sm text-gray-500 mb-1">Client</span>
+                      <span className="font-medium">Confidential</span>
+                    </div>
+                    <div>
+                      <span className="block text-sm text-gray-500 mb-1">Timeline</span>
+                      <span className="font-medium">8 Weeks</span>
+                    </div>
+                    <div>
+                      <span className="block text-sm text-gray-500 mb-1">Role</span>
+                      <span className="font-medium">Full Stack Development</span>
+                    </div>
+                  </div>
 
-            <div>
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-                <h4 className="text-lg font-semibold mb-4">Links</h4>
-                {project.liveUrl ? (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-primary text-white font-medium hover:bg-orange-600 transition-colors"
-                  >
-                    Open Live Demo <ExternalLink size={18} />
-                  </a>
-                ) : (
-                  <span className="text-gray-400">Live demo is currently not available.</span>
-                )}
+                  {project.liveUrl && (
+                    <a 
+                      href={project.liveUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="block w-full py-3 bg-primary text-white text-center rounded-lg font-medium hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 group"
+                    >
+                      Visit Live Site
+                      <ExternalLink size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </main>
       <Footer />
-    </div>
+    </motion.div>
   );
 };
 

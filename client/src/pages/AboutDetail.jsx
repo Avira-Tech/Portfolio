@@ -27,7 +27,12 @@ const sections = [
 
 const AboutDetail = () => {
   return (
-    <div className="bg-dark min-h-screen text-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="bg-dark min-h-screen text-white"
+    >
       <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-6 max-w-5xl">
@@ -51,9 +56,9 @@ const AboutDetail = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-8"
+                className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-8 hover:border-primary/50 transition-colors group"
               >
-                <h2 className="text-2xl font-bold mb-3">{s.title}</h2>
+                <h2 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">{s.title}</h2>
                 <p className="text-gray-300 leading-relaxed">{s.content}</p>
               </motion.div>
             ))}
@@ -61,7 +66,7 @@ const AboutDetail = () => {
         </div>
       </main>
       <Footer />
-    </div>
+    </motion.div>
   );
 };
 

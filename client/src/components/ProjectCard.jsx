@@ -18,12 +18,12 @@ const ProjectCard = ({ project, index }) => {
           alt={project.title} 
           loading="lazy"
           decoding="async"
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
           initial={{ scale: 1 }}
           whileInView={{ scale: 1 }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.5 }}
         />
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-500"></div>
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black via-black/60 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
       </div>
       
       {/* Content */}
@@ -59,7 +59,7 @@ const ProjectCard = ({ project, index }) => {
             </span>
           </div>
 
-          <h3 className="text-3xl font-bold text-white mb-3 group-hover:text-primary transition-colors duration-300">{project.title}</h3>
+          <h3 className="text-3xl font-bold text-white mb-3 transition-colors duration-300">{project.title}</h3>
           
           <p className="text-gray-300 group-hover:text-white text-sm mb-6 line-clamp-2 group-hover:line-clamp-none transition-all duration-500 opacity-80 group-hover:opacity-100">
             {project.description}
