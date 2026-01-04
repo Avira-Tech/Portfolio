@@ -2,123 +2,105 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 
-const ThreeBackground = () => {
+const ThreeBackground = ({ count = 1200, size = 0.02, opacity = 0.6, bounded = true, className = 'absolute inset-0 z-0 pointer-events-none' }) => {
   const mountRef = useRef(null);
 
   useEffect(() => {
     const mount = mountRef.current;
-    
-    // Scene setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    mount.appendChild(renderer.domElement);
 
-    // Particles
+    const setRendererSize = () => {
+      const w = bounded ? mount.clientWidth : window.innerWidth;
+      const h = bounded ? mount.clientHeight : window.innerHeight;
+      camera.aspect = w / h || 1;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    };
+
+    mount.appendChild(renderer.domElement);
+    setRendererSize();
+
     const particlesGeometry = new THREE.BufferGeometry();
-    const count = 2000;
-    
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
-    
-    for(let i = 0; i < count * 3; i++) {
-      positions[i] = (Math.random() - 0.5) * 10;
-      colors[i] = Math.random();
+
+    for (let i = 0; i < count; i++) {
+      const i3 = i * 3;
+      positions[i3] = (Math.random() - 0.5) * 10;
+      positions[i3 + 1] = (Math.random() - 0.5) * 10;
+      positions[i3 + 2] = (Math.random() - 0.5) * 10;
+      const c = Math.random();
+      colors[i3] = c;
+      colors[i3 + 1] = 0.6 + c * 0.4;
+      colors[i3 + 2] = 1 - c * 0.3;
     }
-    
+
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    
+
     const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.02,
+      size,
       vertexColors: true,
       transparent: true,
-      opacity: 0.8,
-      blending: THREE.AdditiveBlending
+      opacity,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
-    
+
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
-
     camera.position.z = 3;
 
-    // Mouse interaction
-    let mouseX = 0;
-    let mouseY = 0;
-
+    let lastMove = 0;
     const handleMouseMove = (event) => {
-      mouseX = event.clientX / window.innerWidth - 0.5;
-      mouseY = event.clientY / window.innerHeight - 0.5;
-      
-      // GSAP animation on mouse move
-      gsap.to(particlesMesh.rotation, {
-        x: mouseY * 0.5,
-        y: mouseX * 0.5,
-        duration: 2,
-        ease: "power2.out"
-      });
+      const now = performance.now();
+      if (now - lastMove < 50) return;
+      lastMove = now;
+      const mx = event.clientX / (bounded ? mount.clientWidth : window.innerWidth) - 0.5;
+      const my = event.clientY / (bounded ? mount.clientHeight : window.innerHeight) - 0.5;
+      gsap.to(particlesMesh.rotation, { x: my * 0.4, y: mx * 0.4, duration: 1.2, ease: 'power2.out' });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-
-    // Animation loop
-    const clock = new THREE.Clock();
-
-    const animate = () => {
-      const elapsedTime = clock.getElapsedTime();
-      
-      // Gentle constant rotation
-      particlesMesh.rotation.y += 0.001;
-      particlesMesh.rotation.x += 0.001;
-      
-      // Wave effect
-      const positions = particlesGeometry.attributes.position.array;
-      for(let i = 0; i < count; i++) {
-        const i3 = i * 3;
-        const x = particlesGeometry.attributes.position.array[i3];
-        // positions[i3 + 1] = Math.sin(elapsedTime + x) * 0.5; // Simple wave on Y axis
-      }
-      particlesGeometry.attributes.position.needsUpdate = true;
-
+    let running = true;
+    const render = () => {
+      if (!running) return;
+      particlesMesh.rotation.y += 0.0008;
+      particlesMesh.rotation.x += 0.0006;
       renderer.render(scene, camera);
-      requestAnimationFrame(animate);
+      requestAnimationFrame(render);
     };
+    render();
 
-    animate();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          running = entry.isIntersecting;
+          if (running) render();
+        });
+      },
+      { root: null, threshold: 0.1 }
+    );
+    io.observe(mount);
 
-    // Resize handler
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    };
-
+    const handleResize = () => setRendererSize();
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
       mount.removeChild(renderer.domElement);
-      
-      // Dispose resources
+      io.disconnect();
       particlesGeometry.dispose();
       particlesMaterial.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [count, size, opacity, bounded]);
 
-  return (
-    <div 
-      ref={mountRef} 
-      className="absolute inset-0 z-0 pointer-events-none"
-      style={{ background: 'transparent' }}
-    />
-  );
+  return <div ref={mountRef} className={className} style={{ background: 'transparent' }} />;
 };
 
 export default ThreeBackground;

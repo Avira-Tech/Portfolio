@@ -1,11 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, ArrowRight, Loader2 } from 'lucide-react';
+import { useGsapScroll } from '../hooks/useGsapScroll';
+import ThreeBackground from './ThreeBackground';
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const ref = useRef(null);
+  
+  useGsapScroll(ref, [
+    {
+      targets: '.blog-card',
+      vars: { opacity: 0, y: 40, stagger: 0.08, duration: 0.6, ease: 'power2.out' },
+      scrollTrigger: { start: 'top 80%', end: 'bottom 20%' }
+    }
+  ]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -26,8 +37,9 @@ const Blogs = () => {
   }, []);
 
   return (
-    <div className="py-20 bg-black/30">
-      <div className="container mx-auto px-6">
+    <div ref={ref} className="py-20 bg-black/30 relative overflow-hidden">
+      <ThreeBackground bounded count={500} opacity={0.3} />
+      <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Latest Tech <span className="text-primary">News</span></h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
@@ -48,7 +60,7 @@ const Blogs = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
                 viewport={{ once: true }}
-                className="bg-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl overflow-hidden hover:border-primary/50 transition-all group h-full flex flex-col"
+                className="blog-card bg-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl overflow-hidden hover:border-primary/50 transition-all group h-full flex flex-col"
               >
                 <div className="relative h-48 overflow-hidden">
                   <img

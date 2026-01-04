@@ -9,7 +9,7 @@ const ProjectCard = ({ project, index }) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
       viewport={{ once: true, margin: "-50px" }}
-      className="group relative h-[400px] rounded-2xl overflow-hidden bg-card border border-gray-800 shadow-2xl"
+      className="project-item group relative h-[400px] rounded-2xl overflow-hidden bg-card border border-gray-800 shadow-2xl"
     >
       {/* Parallax Image Background */}
       <div className="absolute inset-0 overflow-hidden">

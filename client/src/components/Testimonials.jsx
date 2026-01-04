@@ -1,4 +1,7 @@
 import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { useGsapScroll } from '../hooks/useGsapScroll';
+import ThreeBackground from './ThreeBackground';
 import { Star } from 'lucide-react';
 
 const testimonials = [
@@ -26,9 +29,18 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
+  const ref = useRef(null);
+  useGsapScroll(ref, [
+    {
+      targets: '.testimonial-card',
+      vars: { opacity: 0, y: 20, stagger: 0.1, duration: 0.5, ease: 'power2.out' },
+      scrollTrigger: { start: 'top 80%', end: 'bottom 20%' }
+    }
+  ]);
   return (
-    <div className="py-20 bg-dark">
-      <div className="container mx-auto px-6">
+    <div ref={ref} className="py-20 bg-dark relative overflow-hidden">
+      <ThreeBackground bounded count={600} opacity={0.35} />
+      <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Client <span className="text-primary">Testimonials</span></h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
@@ -44,7 +56,7 @@ const Testimonials = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="p-8 rounded-xl bg-card border border-gray-800 relative"
+              className="testimonial-card p-8 rounded-xl bg-card border border-gray-800 relative"
             >
               <div className="flex gap-1 mb-4 text-primary">
                 {[...Array(5)].map((_, i) => (

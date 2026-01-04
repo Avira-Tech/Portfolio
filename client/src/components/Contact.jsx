@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { useGsapScroll } from '../hooks/useGsapScroll';
+import ThreeBackground from './ThreeBackground';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,15 @@ const Contact = () => {
     message: ''
   });
   const [status, setStatus] = useState('idle'); // idle, submitting, success, error
+  const ref = useRef(null);
+  
+  useGsapScroll(ref, [
+    {
+      targets: '.contact-form, .contact-info',
+      vars: { opacity: 0, y: 20, stagger: 0.1, duration: 0.5, ease: 'power2.out' },
+      scrollTrigger: { start: 'top 80%', end: 'bottom 20%' }
+    }
+  ]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -41,10 +52,11 @@ const Contact = () => {
   };
 
   return (
-    <div className="py-20 bg-dark relative">
+    <div ref={ref} className="py-20 bg-dark relative overflow-hidden">
+      <ThreeBackground bounded count={600} opacity={0.35} />
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
       
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Get In <span className="text-primary">Touch</span></h2>
@@ -54,7 +66,7 @@ const Contact = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="md:col-span-1 space-y-8">
+            <div className="contact-info md:col-span-1 space-y-8">
               <div>
                 <h3 className="text-xl font-bold text-white mb-2">Contact Info</h3>
                 <p className="text-gray-400">Feel free to reach out to us via email or phone.</p>
@@ -72,10 +84,7 @@ const Contact = () => {
             </div>
 
             <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="md:col-span-2 bg-card p-8 rounded-xl border border-gray-800"
+              className="contact-form md:col-span-2 bg-card p-8 rounded-xl border border-gray-800"
             >
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">

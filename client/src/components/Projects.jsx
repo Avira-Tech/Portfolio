@@ -1,5 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import { useGsapScroll } from '../hooks/useGsapScroll';
+import ThreeBackground from './ThreeBackground';
 import ProjectCard from './ProjectCard';
 
 const projects = [
@@ -53,9 +55,18 @@ const Projects = () => {
   });
 
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  
+  useGsapScroll(ref, [
+    {
+      targets: '.project-item',
+      vars: { opacity: 0, y: 40, stagger: 0.1, duration: 0.6, ease: 'power2.out' },
+      scrollTrigger: { start: 'top 80%', end: 'bottom 20%' }
+    }
+  ]);
 
   return (
     <div ref={ref} className="py-24 bg-dark relative overflow-hidden">
+       <ThreeBackground bounded count={700} opacity={0.35} />
        {/* Background Elements */}
        <motion.div 
          style={{ y: backgroundY }}
