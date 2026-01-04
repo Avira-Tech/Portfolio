@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Particles from './Particles';
+import ThreeBackground from './ThreeBackground';
 import Magnetic from './Magnetic';
 
 const Hero = () => {
@@ -12,7 +12,7 @@ const Hero = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-dark">
-      <Particles />
+      <ThreeBackground />
       
       {/* Background Elements */}
       <div className="absolute inset-0 bg-dark overflow-hidden -z-10">
