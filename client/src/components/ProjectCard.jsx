@@ -9,7 +9,7 @@ const ProjectCard = ({ project, index }) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
       viewport={{ once: true, margin: "-50px" }}
-      className="project-item group relative h-[400px] rounded-2xl overflow-hidden bg-card border border-gray-800 shadow-2xl"
+      className="project-item group relative h-[400px] rounded-2xl overflow-hidden bg-card border border-gray-800 shadow-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(255,107,0,0.3)] transition-all duration-300"
     >
       {/* Parallax Image Background */}
       <div className="absolute inset-0 overflow-hidden">
@@ -54,7 +54,7 @@ const ProjectCard = ({ project, index }) => {
                 </span>
               )}
             </div>
-            <span className="text-xs font-bold text-primary uppercase tracking-widest border border-primary/30 px-3 py-1 rounded-full bg-primary/10 backdrop-blur-sm">
+            <span className="text-xs font-bold text-white uppercase tracking-widest border border-primary/30 px-3 py-1 rounded-full bg-primary/10 backdrop-blur-sm">
               {project.category}
             </span>
           </div>

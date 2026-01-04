@@ -52,8 +52,7 @@ const Contact = () => {
   };
 
   return (
-    <div ref={ref} className="py-20 bg-dark relative overflow-hidden">
-      <ThreeBackground bounded count={600} opacity={0.35} />
+    <div ref={ref} className="py-20 bg-transparent relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
       
       <div className="container mx-auto px-6 relative z-10">

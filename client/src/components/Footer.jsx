@@ -41,7 +41,7 @@ const Footer = () => {
               <Link to="/projects" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Projects</Link>
               <Link to="/blog/1" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Blogs</Link>
               <Link to="/why-we-are-different" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Why We Are Different</Link>
-              <a href="#contact" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Contact</a>
+              <Link to="/#contact" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Contact</Link>
             </div>
           </motion.div>
 

@@ -9,6 +9,8 @@ import Blogs from '../components/Blogs'
 import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 import { motion } from 'framer-motion'
+import ThreeBackground from '../components/ThreeBackground'
+import SEO from '../components/SEO'
 
 const LandingPage = () => {
   return (
@@ -19,8 +21,10 @@ const LandingPage = () => {
       transition={{ duration: 0.5 }}
       className="bg-dark min-h-screen text-white selection:bg-primary/30 selection:text-white"
     >
+      <SEO />
+      <ThreeBackground bounded={false} className="fixed inset-0 z-0 pointer-events-none" opacity={0.4} />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <section id="home">
           <Hero />
         </section>

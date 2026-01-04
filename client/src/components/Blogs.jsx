@@ -38,7 +38,6 @@ const Blogs = () => {
 
   return (
     <div ref={ref} className="py-20 bg-black/30 relative overflow-hidden">
-      <ThreeBackground bounded count={500} opacity={0.3} />
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Latest Tech <span className="text-primary">News</span></h2>
@@ -60,7 +59,7 @@ const Blogs = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
                 viewport={{ once: true }}
-                className="blog-card bg-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl overflow-hidden hover:border-primary/50 transition-all group h-full flex flex-col"
+                className="blog-card bg-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl overflow-hidden hover:border-primary/50 transition-all group h-full flex flex-col hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(255,107,0,0.2)] duration-300"
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -68,7 +67,7 @@ const Blogs = () => {
                     alt={blog.title}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                   />
                   <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-white flex items-center gap-1 border border-white/10">
                     <Calendar size={12} />

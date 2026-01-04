@@ -92,8 +92,7 @@ const Different = () => {
     }
   ]);
   return (
-    <div ref={ref} className="py-24 bg-dark relative overflow-hidden">
-      <ThreeBackground bounded count={600} opacity={0.35} />
+    <div ref={ref} className="py-24 bg-transparent relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -right-64 w-96 h-96 bg-primary/5 rounded-full blur-[100px]"></div>

@@ -47,8 +47,7 @@ const About = () => {
   ]);
 
   return (
-    <div className="py-20 bg-dark relative overflow-hidden" ref={ref}>
-      <ThreeBackground bounded count={600} opacity={0.45} />
+    <div className="py-20 bg-transparent relative overflow-hidden" ref={ref}>
       {/* Decorative background element */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
 

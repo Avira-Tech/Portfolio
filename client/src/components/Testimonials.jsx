@@ -38,8 +38,7 @@ const Testimonials = () => {
     }
   ]);
   return (
-    <div ref={ref} className="py-20 bg-dark relative overflow-hidden">
-      <ThreeBackground bounded count={600} opacity={0.35} />
+    <div ref={ref} className="py-20 bg-transparent relative overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Client <span className="text-primary">Testimonials</span></h2>
@@ -54,9 +53,14 @@ const Testimonials = () => {
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              whileHover={{ 
+                y: -10,
+                boxShadow: "0 10px 30px -10px rgba(255, 107, 0, 0.3)",
+                borderColor: "rgba(255, 107, 0, 0.5)"
+              }}
+              transition={{ duration: 0.3 }}
               viewport={{ once: true }}
-              className="testimonial-card p-8 rounded-xl bg-card border border-gray-800 relative"
+              className="testimonial-card p-8 rounded-xl bg-card border border-gray-800 relative cursor-pointer"
             >
               <div className="flex gap-1 mb-4 text-primary">
                 {[...Array(5)].map((_, i) => (

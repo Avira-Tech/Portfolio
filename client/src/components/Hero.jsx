@@ -1,7 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import ThreeBackground from './ThreeBackground';
 import Magnetic from './Magnetic';
 
 const Hero = () => {
@@ -11,8 +10,7 @@ const Hero = () => {
   const words = title.split(" ");
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-dark">
-      <ThreeBackground />
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-transparent">
       
       {/* Background Elements */}
       <div className="absolute inset-0 bg-dark overflow-hidden -z-10">
@@ -60,7 +58,7 @@ const Hero = () => {
             </div>
           </motion.div>
           
-          <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold text-white mb-8 leading-tight tracking-tighter flex flex-wrap justify-center gap-x-4 gap-y-2">
+          <h1 className="text-4xl md:text-7xl lg:text-9xl font-bold text-white mb-8 leading-tight tracking-tighter flex flex-wrap justify-center gap-x-4 gap-y-2 break-words">
             {words.map((word, i) => (
               <motion.span
                 key={i}
@@ -104,13 +102,6 @@ const Hero = () => {
           </motion.div>
         </motion.div>
       </div>
-
-      <motion.div 
-        style={{ opacity: useTransform(scrollY, [0, 200], [1, 0]) }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 animate-bounce"
-      >
-        <ChevronDown size={24} />
-      </motion.div>
     </div>
   );
 };

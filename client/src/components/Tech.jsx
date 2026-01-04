@@ -78,8 +78,7 @@ const Tech = () => {
   ]);
 
   return (
-    <div ref={ref} className="py-24 bg-dark relative overflow-hidden">
-      <ThreeBackground bounded count={700} opacity={0.35} />
+    <div ref={ref} className="py-24 bg-transparent relative overflow-hidden">
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 pointer-events-none"></div>
       
       <div className="container mx-auto px-6 relative z-10">
