@@ -10,7 +10,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/blogs');
+        const response = await fetch('https://portfolio-backend-3p35.onrender.com/api/blogs');
         if (response.ok) {
           const data = await response.json();
           setBlogs(data);
