@@ -11,8 +11,8 @@ const app = express();
 const parser = new Parser();
 const PORT = process.env.PORT || 5000;
 
-// In-memory cache for blogs
-let cachedBlogs = [];
+let primaryBlogs = [];
+let backupBlogs = [];
 
 // Middleware
 app.use(cors());
@@ -73,107 +73,98 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// Fetch News Function
 const fetchTechNews = async () => {
-  console.log('Fetching latest tech news...');
   try {
     const allArticles = [];
-
-    // 1. Fetch from Dev.to
     const tags = ['devops', 'security', 'webdev', 'startup', 'ai'];
-    const devToPromises = tags.map(tag => 
+    const devToPromises = tags.map(tag =>
       fetch(`https://dev.to/api/articles?tag=${tag}&top=7&per_page=3`).then(res => res.json())
     );
-
     const devToResults = await Promise.all(devToPromises);
     const devToArticles = devToResults.flat().map(article => ({
-      id: article.id.toString(),
+      id: article.id?.toString(),
       title: article.title,
       date: new Date(article.published_at),
       excerpt: article.description,
       image: article.cover_image || article.social_image || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
       url: article.url,
-      tags: article.tag_list,
-      author: article.user.name,
+      tags: article.tag_list || [],
+      author: article.user?.name || 'Dev.to',
       source: 'Dev.to',
-      content: article.body_html || article.body_markdown // Cache content for details view
-    }));
+      content: article.body_html || article.body_markdown || ''
+    })).filter(a => a.id && a.title && a.url);
     allArticles.push(...devToArticles);
 
-    // 2. Fetch from RSS Feeds
     const rssFeeds = [
       'https://techcrunch.com/feed/',
       'https://www.theverge.com/rss/index.xml',
-      // 'https://www.wired.com/feed/rss' // Optional
+      'https://www.wired.com/feed/rss'
     ];
-
     for (const feedUrl of rssFeeds) {
       try {
         const feed = await parser.parseURL(feedUrl);
-        const rssArticles = feed.items.slice(0, 5).map(item => ({
+        const rssArticles = (feed.items || []).slice(0, 10).map(item => ({
           id: item.guid || item.link,
           title: item.title,
-          date: new Date(item.pubDate),
-          excerpt: item.contentSnippet || item.content,
-          image: item.enclosure?.url || 'https://images.unsplash.com/photo-1504384308090-c54be3855833?w=800&q=80', // Fallback image
+          date: new Date(item.pubDate || Date.now()),
+          excerpt: item.contentSnippet || item.content || '',
+          image: item.enclosure?.url || 'https://images.unsplash.com/photo-1504384308090-c54be3855833?w=800&q=80',
           url: item.link,
           tags: item.categories || [],
-          author: item.creator || feed.title,
-          source: feed.title,
-          content: item.content || item.contentSnippet
-        }));
+          author: item.creator || feed.title || 'RSS',
+          source: feed.title || 'RSS',
+          content: item.content || item.contentSnippet || ''
+        })).filter(a => a.id && a.title && a.url);
         allArticles.push(...rssArticles);
       } catch (err) {
-        console.error(`Error fetching RSS feed ${feedUrl}:`, err.message);
+        console.error('RSS fetch error:', err.message);
       }
     }
 
-    // Remove duplicates
-    const uniqueArticles = Array.from(new Map(allArticles.map(item => [item.id, item])).values());
-
-    // Sort by date (newest first)
-    uniqueArticles.sort((a, b) => b.date - a.date);
-
-    // Update Cache (Keep top 50)
-    cachedBlogs = uniqueArticles.slice(0, 50).map(article => ({
+    const unique = Array.from(new Map(allArticles.map(a => [a.id, a])).values());
+    unique.sort((a, b) => b.date - a.date);
+    const normalized = unique.map(article => ({
       ...article,
-      date: article.date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      })
+      date: article.date instanceof Date
+        ? article.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+        : article.date
     }));
 
+    const candidates = normalized.slice(0, 6);
+    const primaryCandidates = candidates.slice(0, 3);
+    const backupCandidates = candidates.slice(3, 6);
+
+    if (primaryCandidates.length === 3) {
+      for (let i = 0; i < primaryCandidates.length; i++) {
+        primaryBlogs[i] = primaryCandidates[i];
+      }
+      for (let i = 0; i < backupCandidates.length; i++) {
+        backupBlogs[i] = backupCandidates[i];
+      }
+    }
   } catch (error) {
-    console.error('Error in fetchTechNews:', error);
+    console.error('fetchTechNews error:', error);
   }
 };
 
-// Schedule Auto-Update (Every 1 hour)
-cron.schedule('0 * * * *', () => {
+cron.schedule('*/20 * * * *', () => {
   fetchTechNews();
 });
 
-// Initial Fetch
 fetchTechNews();
 
-// Blog Posts Endpoint (Returns Cached Data)
 app.get('/api/blogs', (req, res) => {
-  res.json(cachedBlogs);
+  const result = primaryBlogs.length >= 3 ? primaryBlogs.slice(0, 3) : [...primaryBlogs, ...backupBlogs].slice(0, 3);
+  res.json(result);
 });
 
-// Single Blog Post Endpoint
 app.get('/api/blogs/:id', async (req, res) => {
   const { id } = req.params;
-  
-  // Check cache first
-  const cachedArticle = cachedBlogs.find(blog => blog.id === id || blog.id.toString() === id);
-  
+  const cachedArticle = [...primaryBlogs, ...backupBlogs].find(blog => blog.id === id || blog.id?.toString() === id);
   if (cachedArticle) {
     return res.json(cachedArticle);
   }
 
-  // Fallback for Dev.to if not in cache (e.g. old link)
   if (!isNaN(id)) {
     try {
       const response = await fetch(`https://dev.to/api/articles/${id}`);

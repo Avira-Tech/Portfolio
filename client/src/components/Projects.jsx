@@ -1,7 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { useGsapScroll } from '../hooks/useGsapScroll';
-import ThreeBackground from './ThreeBackground';
 import ProjectCard from './ProjectCard';
 import { projects } from '../data/projects';
 

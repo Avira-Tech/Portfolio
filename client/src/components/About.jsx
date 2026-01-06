@@ -1,7 +1,6 @@
 import { motion, useInView, useSpring, useTransform } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { useGsapScroll } from '../hooks/useGsapScroll';
-import ThreeBackground from './ThreeBackground';
 
 const AnimatedNumber = ({ value }) => {
   const ref = useRef(null);

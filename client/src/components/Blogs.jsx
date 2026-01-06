@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, ArrowRight, Loader2 } from 'lucide-react';
 import { useGsapScroll } from '../hooks/useGsapScroll';
-import ThreeBackground from './ThreeBackground';
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);

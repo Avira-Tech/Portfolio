@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { useGsapScroll } from '../hooks/useGsapScroll';
-import ThreeBackground from './ThreeBackground';
 import { Layout, Server, Database, Smartphone, Globe, Cloud, Code, Terminal, Cpu, Shield, Wifi, Monitor } from 'lucide-react';
 
 const techs = [

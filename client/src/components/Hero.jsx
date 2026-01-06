@@ -88,16 +88,16 @@ const Hero = () => {
             className="flex flex-col md:flex-row gap-6 justify-center items-center"
           >
             <Magnetic>
-              <a href="#projects" className="px-8 py-4 bg-primary text-white rounded-full font-medium hover:bg-orange-600 transition-colors flex items-center gap-2 group">
+              <Link to="/#projects" aria-label="View Projects" className="px-8 py-4 bg-primary text-white rounded-full font-medium hover:bg-orange-600 transition-colors flex items-center gap-2 group">
                 View Projects
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
+              </Link>
             </Magnetic>
             
             <Magnetic>
-              <a href="#contact" className="px-8 py-4 border border-white/20 text-white rounded-full font-medium hover:bg-white/5 transition-colors">
+              <Link to="/#contact" aria-label="Contact Us" className="px-8 py-4 border border-white/20 text-white rounded-full font-medium hover:bg-white/5 transition-colors">
                 Contact Us
-              </a>
+              </Link>
             </Magnetic>
           </motion.div>
         </motion.div>

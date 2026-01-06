@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useGsapScroll } from '../hooks/useGsapScroll';
-import ThreeBackground from './ThreeBackground';
 import { Shield, Zap, Code, Users, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
