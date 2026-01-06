@@ -63,7 +63,7 @@ const BlogDetail = () => {
         <article className="container mx-auto px-6 max-w-4xl">
           <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-primary transition-colors mb-8 group">
             <ArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-            Back to Articles
+            Back to Home
           </Link>
 
           <motion.div

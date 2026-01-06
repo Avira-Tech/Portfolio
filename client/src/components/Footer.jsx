@@ -39,7 +39,7 @@ const Footer = () => {
             <h4 className="text-white font-semibold mb-4">Quick Links</h4>
             <div className="flex flex-col gap-2 text-gray-400">
               <Link to="/projects" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Projects</Link>
-              <Link to="/blog/1" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Blogs</Link>
+              <Link to="/#blogs" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Blogs</Link>
               <Link to="/why-we-are-different" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Why We Are Different</Link>
               <Link to="/#contact" className="hover:text-primary transition-colors hover:translate-x-1 duration-300 inline-block">Contact</Link>
             </div>

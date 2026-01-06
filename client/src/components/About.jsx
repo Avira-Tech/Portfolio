@@ -34,6 +34,8 @@ const StatItem = ({ number, label }) => {
   );
 };
 
+import { Link } from 'react-router-dom';
+
 const About = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -73,10 +75,10 @@ const About = () => {
               expertise and creativity to every project.
             </p>
             
-            <a href="/about" className="text-primary font-semibold hover:text-white transition-colors flex items-center gap-2 mt-4 group">
+            <Link to="/about" className="text-primary font-semibold hover:text-white transition-colors flex items-center gap-2 mt-4 group">
               Learn more about our journey 
               <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </a>
+            </Link>
           </motion.div>
 
           <motion.div

@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Shield, Zap, Code, Users } from 'lucide-react';
+import { Shield, Zap, Code, Users, ArrowLeft } from 'lucide-react';
 
 const sections = [
   {
@@ -61,6 +62,11 @@ const DifferentDetail = () => {
       <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-6 max-w-5xl">
+          <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-primary transition-colors mb-8 group">
+            <ArrowLeft className="group-hover:-translate-x-1 transition-transform" />
+            Back to Home
+          </Link>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

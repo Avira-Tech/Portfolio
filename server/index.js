@@ -144,7 +144,6 @@ const fetchTechNews = async () => {
       })
     }));
 
-    console.log(`Updated news cache with ${cachedBlogs.length} articles.`);
   } catch (error) {
     console.error('Error in fetchTechNews:', error);
   }

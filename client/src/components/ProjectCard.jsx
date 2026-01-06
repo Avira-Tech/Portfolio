@@ -27,8 +27,8 @@ const ProjectCard = ({ project, index }) => {
       </div>
       
       {/* Content */}
-      <div className="absolute inset-0 p-8 flex flex-col justify-end">
-        <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+      <div className="relative z-10 p-8 flex flex-col justify-end h-full min-h-[400px] bg-gradient-to-t from-black via-black/60 to-transparent">
+        <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 mt-auto">
           <div className="flex justify-between items-end mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
              <div className="flex gap-3">
               <Link 
