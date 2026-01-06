@@ -51,7 +51,7 @@ const Blogs = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {blogs.map((blog, index) => (
+            {blogs.slice(0, 3).map((blog, index) => (
               <motion.div
                 key={blog.id}
                 initial={{ opacity: 0, y: 50 }}
@@ -62,10 +62,11 @@ const Blogs = () => {
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={blog.image}
+                    src={blog.image || 'https://images.unsplash.com/photo-1504384308090-c54be3855833?w=800&q=80'}
                     alt={blog.title}
                     loading="lazy"
                     decoding="async"
+                    onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1504384308090-c54be3855833?w=800&q=80'; }}
                     className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                   />
                   <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-white flex items-center gap-1 border border-white/10">
@@ -76,7 +77,7 @@ const Blogs = () => {
 
                 <div className="p-6 flex flex-col flex-grow">
                   <div className="flex gap-2 mb-3 flex-wrap">
-                    {blog.tags && blog.tags.slice(0, 2).map(tag => (
+                    {(blog.tags || []).slice(0, 2).map(tag => (
                       <span key={tag} className="text-xs text-primary font-medium uppercase tracking-wider">#{tag}</span>
                     ))}
                   </div>

@@ -106,16 +106,29 @@ const BlogDetail = () => {
             {/* Featured Image */}
             <div className="mb-12 rounded-2xl overflow-hidden border border-white/10">
               <img 
-                src={blog.image} 
+                src={blog.image || 'https://images.unsplash.com/photo-1504384308090-c54be3855833?w=1200&q=80'} 
                 alt={blog.title} 
+                loading="lazy"
+                decoding="async"
+                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1504384308090-c54be3855833?w=1200&q=80'; }}
                 className="w-full h-auto object-cover max-h-[500px]"
               />
             </div>
 
             {/* Content */}
             <div className="prose prose-invert prose-lg max-w-none">
-              {/* Render HTML content safely if needed, or simple text */}
-              <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+              {blog.content ? (
+                <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+              ) : (
+                <>
+                  <p className="text-gray-300 mb-6">{blog.excerpt}</p>
+                  {blog.url && (
+                    <a href={blog.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary font-medium">
+                      View Original Article
+                    </a>
+                  )}
+                </>
+              )}
             </div>
           </motion.div>
         </article>
