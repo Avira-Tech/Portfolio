@@ -19,6 +19,32 @@ if (!process.env.EMAIL_USER) {
   console.warn('WARNING: EMAIL_USER is not defined. Using default: avira.tech@zohomail.in');
 }
 
+// Email Transporter Helper
+const createTransporter = () => {
+  const port = parseInt(process.env.EMAIL_PORT || '465');
+  // Port 465 uses implicit SSL (secure: true), Port 587 uses STARTTLS (secure: false)
+  const isSecure = port === 465; 
+
+  console.log(`Creating mail transporter: Host=${process.env.EMAIL_HOST || 'smtp.zoho.in'}, Port=${port}, Secure=${isSecure}`);
+
+  return nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.zoho.in',
+    port: port,
+    secure: isSecure, 
+    auth: {
+      user: process.env.EMAIL_USER || 'avira.tech@zohomail.in',
+      pass: process.env.EMAIL_PASS,
+    },
+    // Increased timeouts for reliability
+    connectionTimeout: 30000, // 30 seconds
+    greetingTimeout: 30000,   // 30 seconds
+    socketTimeout: 30000,     // 30 seconds
+    // Debug logging to help diagnose connection issues
+    debug: true,
+    logger: true 
+  });
+};
+
 let primaryBlogs = [];
 let backupBlogs = [];
 
@@ -46,15 +72,7 @@ app.post('/api/contact', async (req, res) => {
     }
 
     // Zoho Mail Transporter
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.zoho.in',
-      port: 465,
-      secure: true, // Use SSL
-      auth: {
-        user: process.env.EMAIL_USER || 'avira.tech@zohomail.in',
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    const transporter = createTransporter();
 
     const mailOptions = {
       from: process.env.EMAIL_USER || 'avira.tech@zohomail.in',
@@ -100,15 +118,7 @@ app.post('/api/quote', async (req, res) => {
       return res.status(500).json({ error: 'Server configuration error: Email password not set' });
     }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.zoho.in',
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER || 'avira.tech@zohomail.in',
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    const transporter = createTransporter();
 
     const mailOptions = {
       from: process.env.EMAIL_USER || 'avira.tech@zohomail.in',
