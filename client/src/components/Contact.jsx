@@ -12,6 +12,13 @@ const Contact = () => {
   });
   const [status, setStatus] = useState('idle'); // idle, submitting, success, error
   const ref = useRef(null);
+
+  // Wake up the server on component mount
+  useEffect(() => {
+    fetch('https://portfolio-backend-3p35.onrender.com/')
+      .then(res => console.log('Server wake-up signal sent'))
+      .catch(err => console.error('Server wake-up failed', err));
+  }, []);
   
   useGsapScroll(ref, [
     {

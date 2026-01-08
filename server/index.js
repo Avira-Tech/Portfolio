@@ -11,6 +11,14 @@ const app = express();
 const parser = new Parser();
 const PORT = process.env.PORT || 5000;
 
+// Verify environment variables
+if (!process.env.EMAIL_PASS) {
+  console.warn('WARNING: EMAIL_PASS is not defined. Email sending will fail.');
+}
+if (!process.env.EMAIL_USER) {
+  console.warn('WARNING: EMAIL_USER is not defined. Using default: avira.tech@zohomail.in');
+}
+
 let primaryBlogs = [];
 let backupBlogs = [];
 
@@ -32,9 +40,14 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
+    if (!process.env.EMAIL_PASS) {
+      console.error('EMAIL_PASS environment variable is missing');
+      return res.status(500).json({ error: 'Server configuration error: Email password not set' });
+    }
+
     // Zoho Mail Transporter
     const transporter = nodemailer.createTransport({
-      host: 'smtp.zoho.in',
+      host: process.env.EMAIL_HOST || 'smtp.zoho.in',
       port: 465,
       secure: true, // Use SSL
       auth: {
@@ -82,8 +95,13 @@ app.post('/api/quote', async (req, res) => {
   }
 
   try {
+    if (!process.env.EMAIL_PASS) {
+      console.error('EMAIL_PASS environment variable is missing');
+      return res.status(500).json({ error: 'Server configuration error: Email password not set' });
+    }
+
     const transporter = nodemailer.createTransport({
-      host: 'smtp.zoho.in',
+      host: process.env.EMAIL_HOST || 'smtp.zoho.in',
       port: 465,
       secure: true,
       auth: {

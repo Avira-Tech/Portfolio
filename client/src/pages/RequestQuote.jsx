@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -19,6 +19,13 @@ const RequestQuote = () => {
   });
   const [status, setStatus] = useState('idle'); // idle, submitting, success, error
 
+  // Wake up the server on component mount
+  useEffect(() => {
+    fetch('https://portfolio-backend-3p35.onrender.com/')
+      .then(res => console.log('Server wake-up signal sent'))
+      .catch(err => console.error('Server wake-up failed', err));
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -28,9 +35,8 @@ const RequestQuote = () => {
     setStatus('submitting');
     
     try {
-      // Note: Using localhost for the new endpoint since it's not deployed yet
-      // You might want to update this to your deployed URL in production
-      const response = await fetch('http://localhost:5000/api/quote', {
+      // Note: Using production URL
+      const response = await fetch('https://portfolio-backend-3p35.onrender.com/api/quote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
