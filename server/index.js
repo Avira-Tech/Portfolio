@@ -25,16 +25,35 @@ const createTransporter = () => {
   const port = parseInt(process.env.EMAIL_PORT || '587');
   // Port 465 uses implicit SSL (secure: true), Port 587 uses STARTTLS (secure: false)
   const isSecure = port === 465; 
+  
+  const userEmail = process.env.EMAIL_USER || 'avira.tech@zohomail.in';
+  
+  // Auto-detect host based on email domain if EMAIL_HOST is not explicitly set
+  let defaultHost = 'smtp.zoho.com';
+  if (userEmail.includes('@gmail.com')) {
+    defaultHost = 'smtp.gmail.com';
+  } else if (userEmail.includes('@outlook.com') || userEmail.includes('@hotmail.com')) {
+    defaultHost = 'smtp.office365.com';
+  }
 
-  console.log(`Creating mail transporter: Host=${process.env.EMAIL_HOST || 'smtp.zoho.in'}, Port=${port}, Secure=${isSecure}`);
+  // Use smtp.zoho.com as default global host, it is more reliable for international servers than .in
+  const host = process.env.EMAIL_HOST || defaultHost;
+
+  console.log(`Creating mail transporter: Host=${host}, Port=${port}, Secure=${isSecure}, User=${userEmail}`);
 
   return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.zoho.in',
+    host: host,
     port: port,
     secure: isSecure, 
     auth: {
-      user: process.env.EMAIL_USER || 'avira.tech@zohomail.in',
+      user: userEmail,
       pass: process.env.EMAIL_PASS,
+    },
+    tls: {
+      // Do not fail on invalid certs (common in some cloud setups)
+      rejectUnauthorized: false,
+      // Force compatibility with older cipher suites if needed
+      ciphers: 'SSLv3'
     },
     // Increased timeouts for reliability
     connectionTimeout: 60000, // 60 seconds
