@@ -24,7 +24,7 @@ const BlogDetail = () => {
       try {
         if (!passedBlog) setLoading(true);
         const res = await fetch(
-          `http://localhost:5000/api/blogs/${encodeURIComponent(id)}`
+          `https://portfolio-backend-3p35.onrender.com/api/blogs/${encodeURIComponent(id)}`
         );
         if (!res.ok) throw new Error('Blog not found');
         const data = await res.json();
