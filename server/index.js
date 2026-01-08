@@ -21,7 +21,8 @@ if (!process.env.EMAIL_USER) {
 
 // Email Transporter Helper
 const createTransporter = () => {
-  const port = parseInt(process.env.EMAIL_PORT || '465');
+  // Default to port 587 (STARTTLS) as it is less likely to be blocked than 465
+  const port = parseInt(process.env.EMAIL_PORT || '587');
   // Port 465 uses implicit SSL (secure: true), Port 587 uses STARTTLS (secure: false)
   const isSecure = port === 465; 
 
@@ -36,9 +37,9 @@ const createTransporter = () => {
       pass: process.env.EMAIL_PASS,
     },
     // Increased timeouts for reliability
-    connectionTimeout: 30000, // 30 seconds
+    connectionTimeout: 60000, // 60 seconds
     greetingTimeout: 30000,   // 30 seconds
-    socketTimeout: 30000,     // 30 seconds
+    socketTimeout: 60000,     // 60 seconds
     // Debug logging to help diagnose connection issues
     debug: true,
     logger: true 
