@@ -10,6 +10,8 @@ const BlogDetail = lazy(() => import('./pages/BlogDetail'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
 const DifferentDetail = lazy(() => import('./pages/DifferentDetail'));
 const AboutDetail = lazy(() => import('./pages/AboutDetail'));
+const Pricing = lazy(() => import('./pages/Pricing'));
+const RequestQuote = lazy(() => import('./pages/RequestQuote'));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-dark flex items-center justify-center">
@@ -25,6 +27,8 @@ const AnimatedRoutes = () => {
       <Suspense fallback={<PageLoader />}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/request-quote" element={<RequestQuote />} />
           <Route path="/projects" element={<AllProjects />} />
           <Route path="/projects/:slug" element={<ProjectDetail />} />
           <Route path="/why-we-are-different" element={<DifferentDetail />} />
@@ -39,7 +43,7 @@ const AnimatedRoutes = () => {
 function App() {
   return (
     <HelmetProvider>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ScrollToTop />
         <AnimatedRoutes />
       </Router>

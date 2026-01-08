@@ -59,6 +59,12 @@ const DifferentDetail = () => {
       exit={{ opacity: 0 }}
       className="bg-dark min-h-screen text-white"
     >
+      <SEO 
+        title="Why We Are Different"
+        description="Discover how Avira Tech stands out with a client-first approach, performance-focused development, and clean, maintainable code."
+        keywords="client-first web development, performance optimization, clean code architecture, secure web solutions"
+        url="https://aviratech.com/why-we-are-different"
+      />
       <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-6 max-w-5xl">

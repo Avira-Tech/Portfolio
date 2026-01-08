@@ -33,6 +33,13 @@ const Navbar = () => {
 
   const handleNavClick = (e, href) => {
     e.preventDefault();
+
+    if (href.startsWith('/')) {
+      navigate(href);
+      setIsOpen(false);
+      return;
+    }
+
     if (location.pathname !== '/') {
       navigate(`/${href}`);
     } else {
@@ -51,6 +58,7 @@ const Navbar = () => {
     { name: 'About', href: '#about' },
     { name: 'Projects', href: '#projects' },
     { name: 'Services', href: '#different' },
+    { name: 'Pricing', href: '/pricing' },
     { name: 'Contact', href: '#contact' },
   ];
 

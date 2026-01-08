@@ -1,3 +1,4 @@
+import { Suspense, lazy } from 'react'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import About from '../components/About'
@@ -9,8 +10,9 @@ import Blogs from '../components/Blogs'
 import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 import { motion } from 'framer-motion'
-import ThreeBackground from '../components/ThreeBackground'
 import SEO from '../components/SEO'
+
+const ThreeBackground = lazy(() => import('../components/ThreeBackground'))
 
 const LandingPage = () => {
   return (
@@ -21,8 +23,15 @@ const LandingPage = () => {
       transition={{ duration: 0.5 }}
       className="bg-dark min-h-screen text-white selection:bg-primary/30 selection:text-white"
     >
-      <SEO />
-      <ThreeBackground bounded={false} className="fixed inset-0 z-0 pointer-events-none" opacity={0.4} />
+      <SEO 
+        title="Home"
+        description="Avira Tech offers top-tier web development, mobile apps, and digital transformation services. Build your future with our expert team."
+        keywords="web development, mobile apps, software company, digital transformation, react developers"
+        url="https://aviratech.com"
+      />
+      <Suspense fallback={null}>
+        <ThreeBackground bounded={false} className="fixed inset-0 z-0 pointer-events-none" opacity={0.4} />
+      </Suspense>
       <Navbar />
       <main className="relative z-10">
         <section id="home">

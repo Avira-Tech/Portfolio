@@ -15,7 +15,7 @@ const Logo = ({ className = '', size = 36 }) => {
           height={size}
           onError={() => setImgError(true)}
           className="object-contain rounded-md"
-          loading="lazy"
+          loading="eager"
         />
       )}
       <div className="text-2xl font-bold tracking-tighter">

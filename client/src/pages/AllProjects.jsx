@@ -31,6 +31,12 @@ const AllProjects = () => {
       exit={{ opacity: 0 }}
       className="bg-dark min-h-screen text-white"
     >
+      <SEO 
+        title="Our Projects"
+        description="Explore our portfolio of successful web and mobile projects. See how we help businesses transform their digital presence."
+        keywords="web development portfolio, case studies, project showcase, software development examples"
+        url="https://aviratech.com/projects"
+      />
       <Navbar />
       
       <main className="pt-24 pb-20">

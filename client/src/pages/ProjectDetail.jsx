@@ -30,6 +30,13 @@ const ProjectDetail = () => {
       exit={{ opacity: 0 }}
       className="bg-dark min-h-screen text-white"
     >
+      <SEO 
+        title={project.title}
+        description={project.overview}
+        keywords={`${project.title}, ${project.category}, ${project.tech.join(', ')}`}
+        url={`https://aviratech.com/projects/${project.slug}`}
+        image={project.image}
+      />
       <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-6 max-w-5xl">

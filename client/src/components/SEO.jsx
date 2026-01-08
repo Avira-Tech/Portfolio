@@ -7,11 +7,30 @@ const SEO = ({ title, description, keywords, image, url }) => {
   const siteUrl = 'https://aviratech.com';
   const siteImage = '/logo.png';
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Avira Tech",
+    "url": siteUrl,
+    "logo": `${siteUrl}${siteImage}`,
+    "sameAs": [
+      "https://twitter.com/aviratech",
+      "https://linkedin.com/company/aviratech",
+      "https://github.com/aviratech"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-555-000-0000",
+      "contactType": "customer service"
+    }
+  };
+
   return (
     <Helmet>
       <title>{title ? `${title} | Avira Tech` : siteTitle}</title>
       <meta name="description" content={description || siteDescription} />
       <meta name="keywords" content={keywords || siteKeywords} />
+      <link rel="canonical" href={url || siteUrl} />
       
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
@@ -26,6 +45,11 @@ const SEO = ({ title, description, keywords, image, url }) => {
       <meta property="twitter:title" content={title || siteTitle} />
       <meta property="twitter:description" content={description || siteDescription} />
       <meta property="twitter:image" content={image || siteImage} />
+
+      {/* Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify(structuredData)}
+      </script>
     </Helmet>
   );
 };

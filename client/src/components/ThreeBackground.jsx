@@ -23,11 +23,15 @@ const ThreeBackground = ({ count = 1200, size = 0.02, opacity = 0.6, bounded = t
     mount.appendChild(renderer.domElement);
     setRendererSize();
 
-    const particlesGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(count * 3);
-    const colors = new Float32Array(count * 3);
+    // Reduce particle count for mobile devices
+    const isMobile = window.innerWidth < 768;
+    const effectiveCount = isMobile ? Math.min(count, 400) : count;
 
-    for (let i = 0; i < count; i++) {
+    const particlesGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(effectiveCount * 3);
+    const colors = new Float32Array(effectiveCount * 3);
+
+    for (let i = 0; i < effectiveCount; i++) {
       const i3 = i * 3;
       positions[i3] = (Math.random() - 0.5) * 10;
       positions[i3 + 1] = (Math.random() - 0.5) * 10;

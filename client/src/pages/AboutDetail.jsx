@@ -35,6 +35,12 @@ const AboutDetail = () => {
       exit={{ opacity: 0 }}
       className="bg-dark min-h-screen text-white"
     >
+      <SEO 
+        title="About Us"
+        description="Learn about Avira Tech's journey, values, and mission to deliver high-quality digital solutions for businesses worldwide."
+        keywords="about avira tech, software agency values, tech company mission, web development team"
+        url="https://aviratech.com/about"
+      />
       <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-6 max-w-5xl">
