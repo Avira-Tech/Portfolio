@@ -21,7 +21,7 @@ const RequestQuote = () => {
 
   // Wake up the server on component mount
   useEffect(() => {
-    fetch('https://portfolio-backend-3p35.onrender.com/')
+    fetch('https://portfolio-production-d415.up.railway.app/')
       .then(res => console.log('Server wake-up signal sent'))
       .catch(err => console.error('Server wake-up failed', err));
   }, []);
@@ -36,7 +36,7 @@ const RequestQuote = () => {
     
     try {
       // Note: Using production URL
-      const response = await fetch('https://portfolio-backend-3p35.onrender.com/api/quote', {
+      const response = await fetch('https://portfolio-production-d415.up.railway.app/api/quote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
