@@ -1,7 +1,4 @@
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import { useGsapScroll } from '../hooks/useGsapScroll';
-import ThreeBackground from './ThreeBackground';
 import { Layout, Server, Database, Smartphone, Globe, Cloud, Code, Terminal, Cpu, Shield, Wifi, Monitor } from 'lucide-react';
 
 const techs = [
@@ -18,7 +15,7 @@ const techs = [
 ];
 
 const TechCard = ({ tech }) => (
-  <div className="tech-card w-[280px] shrink-0 p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-primary/50 transition-all group hover:bg-white/10 mx-4 cursor-pointer hover:-translate-y-2 duration-300">
+  <div className="w-[280px] shrink-0 p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-primary/50 transition-all group hover:bg-white/10 mx-4 cursor-pointer hover:-translate-y-2 duration-300">
     <div className="flex items-center gap-4 mb-4">
       <div className="text-primary p-3 bg-primary/10 rounded-xl border border-primary/20 group-hover:scale-110 transition-transform duration-300">
         {tech.icon}
@@ -68,17 +65,9 @@ const Marquee = ({ children, direction = 1, speed = 20 }) => {
 const Tech = () => {
   const row1 = techs.slice(0, 5);
   const row2 = techs.slice(5, 10);
-  const ref = useRef(null);
-  useGsapScroll(ref, [
-    {
-      targets: '.tech-card',
-      vars: { opacity: 0, y: 20, stagger: 0.06, duration: 0.5, ease: 'power2.out' },
-      scrollTrigger: { start: 'top 80%', end: 'bottom 20%' }
-    }
-  ]);
 
   return (
-    <div ref={ref} className="py-24 bg-transparent relative overflow-hidden">
+    <div className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 pointer-events-none"></div>
       
       <div className="container mx-auto px-6 relative z-10">

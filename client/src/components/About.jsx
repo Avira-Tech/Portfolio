@@ -1,7 +1,5 @@
 import { motion, useInView, useSpring, useTransform } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
-import { useGsapScroll } from '../hooks/useGsapScroll';
-import ThreeBackground from './ThreeBackground';
 
 const AnimatedNumber = ({ value }) => {
   const ref = useRef(null);
@@ -25,7 +23,7 @@ const AnimatedNumber = ({ value }) => {
 
 const StatItem = ({ number, label }) => {
   return (
-    <div className="gsap-reveal text-center p-6 border border-gray-800 rounded-xl bg-card hover:border-primary/50 transition-colors group">
+    <div className="text-center p-6 border border-gray-800 rounded-xl bg-card hover:border-primary/50 transition-colors group">
       <h3 className="text-4xl font-bold text-primary mb-2 flex justify-center items-center">
         <AnimatedNumber value={parseInt(number)} />+
       </h3>
@@ -37,17 +35,9 @@ const StatItem = ({ number, label }) => {
 const About = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  
-  useGsapScroll(ref, [
-    {
-      targets: '.gsap-reveal',
-      vars: { opacity: 0, y: 30, stagger: 0.08, duration: 0.6, ease: 'power2.out' },
-      scrollTrigger: { start: 'top 80%', end: 'bottom 20%' }
-    }
-  ]);
 
   return (
-    <div className="py-20 bg-transparent relative overflow-hidden" ref={ref}>
+    <div className="py-20 relative overflow-hidden" ref={ref}>
       {/* Decorative background element */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
 
@@ -58,16 +48,16 @@ const About = () => {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h2 className="gsap-reveal text-3xl md:text-5xl font-bold mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">
               About <span className="text-primary">Avira Tech</span>
             </h2>
             <div className="h-1 w-20 bg-primary mb-8 rounded-full"></div>
-            <p className="gsap-reveal text-gray-300 mb-6 leading-relaxed text-lg">
+            <p className="text-gray-300 mb-6 leading-relaxed text-lg">
               At Avira Tech, we are passionate about transforming ideas into reality through code. 
               As a dedicated freelancer portfolio, we represent a commitment to high-quality software engineering, 
               modern design principles, and user-centric development.
             </p>
-            <p className="gsap-reveal text-gray-300 mb-6 leading-relaxed text-lg">
+            <p className="text-gray-300 mb-6 leading-relaxed text-lg">
               Our mission is to empower businesses with robust digital solutions that scale. 
               Whether it's a complex backend system or a stunning frontend interface, we bring 
               expertise and creativity to every project.

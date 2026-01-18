@@ -1,7 +1,4 @@
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import { useGsapScroll } from '../hooks/useGsapScroll';
-import ThreeBackground from './ThreeBackground';
 import { Star } from 'lucide-react';
 
 const testimonials = [
@@ -29,17 +26,9 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
-  const ref = useRef(null);
-  useGsapScroll(ref, [
-    {
-      targets: '.testimonial-card',
-      vars: { opacity: 0, y: 20, stagger: 0.1, duration: 0.5, ease: 'power2.out' },
-      scrollTrigger: { start: 'top 80%', end: 'bottom 20%' }
-    }
-  ]);
   return (
-    <div ref={ref} className="py-20 bg-transparent relative overflow-hidden">
-      <div className="container mx-auto px-6 relative z-10">
+    <div className="py-20">
+      <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Client <span className="text-primary">Testimonials</span></h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
@@ -53,14 +42,9 @@ const Testimonials = () => {
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ 
-                y: -10,
-                boxShadow: "0 10px 30px -10px rgba(255, 107, 0, 0.3)",
-                borderColor: "rgba(255, 107, 0, 0.5)"
-              }}
-              transition={{ duration: 0.3 }}
+              transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="testimonial-card p-8 rounded-xl bg-card border border-gray-800 relative cursor-pointer"
+              className="p-8 rounded-xl bg-card border border-gray-800 relative"
             >
               <div className="flex gap-1 mb-4 text-primary">
                 {[...Array(5)].map((_, i) => (

@@ -1,7 +1,5 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useGsapScroll } from '../hooks/useGsapScroll';
-import ThreeBackground from './ThreeBackground';
 import { Shield, Zap, Code, Users, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -58,7 +56,7 @@ const FeatureCard = ({ feature, index }) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
       viewport={{ once: true }}
-      className="feature-card relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-8 group"
+      className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-8 group"
     >
       <div
         className="pointer-events-none absolute -inset-px transition duration-300 opacity-0 group-hover:opacity-100"
@@ -83,16 +81,8 @@ const FeatureCard = ({ feature, index }) => {
 };
 
 const Different = () => {
-  const ref = useRef(null);
-  useGsapScroll(ref, [
-    {
-      targets: '.feature-card',
-      vars: { opacity: 0, y: 30, stagger: 0.1, duration: 0.6, ease: 'power2.out' },
-      scrollTrigger: { start: 'top 80%', end: 'bottom 20%' }
-    }
-  ]);
   return (
-    <div ref={ref} className="py-24 bg-transparent relative overflow-hidden">
+    <div className="py-24 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -right-64 w-96 h-96 bg-primary/5 rounded-full blur-[100px]"></div>
