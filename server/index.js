@@ -269,5 +269,6 @@ app.get("/api/blogs/:id", async (req, res) => {
    ✅ START SERVER
    ============================================================ */
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
+
