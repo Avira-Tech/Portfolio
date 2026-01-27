@@ -1,9 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const nodemailer = require('nodemailer');
-const dotenv = require('dotenv');
-const cron = require('node-cron');
-const Parser = require('rss-parser');
+// index.js
+const express = require("express");
+const cors = require("cors");
+const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+const cron = require("node-cron");
+const Parser = require("rss-parser");
 
 dotenv.config();
 
@@ -18,194 +19,255 @@ let cachedBlogs = [];
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('Avira Tech API is running');
+// Home Route
+app.get("/", (req, res) => {
+  res.send("Avira Tech API is running");
 });
 
-// Contact Form Endpoint
-app.post('/api/contact', async (req, res) => {
+/* ============================================================
+   ✅ UPDATED CONTACT ENDPOINT WITH LOGO ATTACHMENT
+   ============================================================ */
+app.post("/api/contact", async (req, res) => {
   const { name, email, subject, message } = req.body;
 
-  if (!name || !email || !subject || !message) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
   try {
-    // Zoho Mail Transporter
     const transporter = nodemailer.createTransport({
-      host: 'smtp.zoho.in',
+      host: process.env.SMTP_HOST || "smtp.zoho.in",
       port: 465,
-      secure: true, // Use SSL
+      secure: true,
       auth: {
-        user: process.env.EMAIL_USER || 'avira.tech@zohomail.in',
+        user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
     });
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER || 'avira.tech@zohomail.in',
-      to: 'avira.tech@zohomail.in',
-      replyTo: email,
-      subject: `New Contact Form: ${subject}`,
-      text: `
-        Name: ${name}
-        Email: ${email}
-        Subject: ${subject}
-        Message: ${message}
-      `,
+    const clientMailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: `We've received your inquiry - Avira Tech`,
       html: `
-        <h3>New Contact Form Submission</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; color: #333; line-height: 1.6;">
+          <h2 style="color: #2563eb;">Hello ${name},</h2>
+          <p>Thank you for reaching out to <strong>Avira Tech</strong>!</p>
+          <p>We've received your message regarding <b>"${subject}"</b>. Our team will review your request and get back to you shortly.</p>
+          
+          <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
+            <p style="margin-bottom: 5px; font-weight: bold;">Best Regards,</p>
+            <p style="font-size: 14px; color: #666; margin: 0;">
+              <strong>Avira Tech Team</strong><br />
+              Digital Solutions & Innovation<br />
+              <a href="https://aviratech.co.in" style="color: #2563eb; text-decoration: none;">www.aviratech.co.in</a>
+            </p>
+            <img src="cid:aviratlogo" alt="Avira Tech Logo" style="width: 150px; height: auto; margin-bottom: 10px;" />
+          </div>
+        </div>
       `,
+      // ✅ This attaches the logo and makes it usable in the HTML via "cid"
+      attachments: [
+        {
+          filename: "logo.png",
+          path: "./assets/logo.png", // Ensure this path points to your actual logo file
+          cid: "aviratlogo", // Must match the src="cid:aviratlogo" in HTML
+        },
+      ],
     };
 
-    await transporter.sendMail(mailOptions);
+    const adminMailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+      replyTo: email,
+      subject: `New Lead: ${subject}`,
+      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+    };
 
-    res.status(200).json({ message: 'Message sent successfully' });
+    await Promise.all([
+      transporter.sendMail(adminMailOptions),
+      transporter.sendMail(clientMailOptions),
+    ]);
+
+    res.status(200).json({ message: "Success" });
   } catch (error) {
-    console.error('Error sending email:', error);
-    res.status(500).json({ error: 'Failed to send message' });
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
 });
-
-// Fetch News Function
+/* ============================================================
+   ✅ FETCH TECH NEWS FUNCTION (Dev.to + RSS)
+   ============================================================ */
 const fetchTechNews = async () => {
-  console.log('Fetching latest tech news...');
+  console.log("Fetching latest tech news...");
+
   try {
     const allArticles = [];
 
-    // 1. Fetch from Dev.to
-    const tags = ['devops', 'security', 'webdev', 'startup', 'ai'];
-    const devToPromises = tags.map(tag => 
-      fetch(`https://dev.to/api/articles?tag=${tag}&top=7&per_page=3`).then(res => res.json())
+    /* ---------------------------
+       1) Fetch from Dev.to API
+       --------------------------- */
+    const tags = ["devops", "security", "webdev", "startup", "ai"];
+
+    const devToPromises = tags.map((tag) =>
+      fetch(`https://dev.to/api/articles?tag=${tag}&top=7&per_page=3`).then(
+        (res) => res.json(),
+      ),
     );
 
     const devToResults = await Promise.all(devToPromises);
-    const devToArticles = devToResults.flat().map(article => ({
+
+    const devToArticles = devToResults.flat().map((article) => ({
       id: article.id.toString(),
       title: article.title,
       date: new Date(article.published_at),
       excerpt: article.description,
-      image: article.cover_image || article.social_image || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
+      image:
+        article.cover_image ||
+        article.social_image ||
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
       url: article.url,
       tags: article.tag_list,
-      author: article.user.name,
-      source: 'Dev.to',
-      content: article.body_html || article.body_markdown // Cache content for details view
+      author: article.user?.name || "Unknown",
+      source: "Dev.to",
+      content: article.body_html || article.body_markdown || "",
     }));
+
     allArticles.push(...devToArticles);
 
-    // 2. Fetch from RSS Feeds
+    /* ---------------------------
+       2) Fetch RSS Feeds
+       --------------------------- */
     const rssFeeds = [
-      'https://techcrunch.com/feed/',
-      'https://www.theverge.com/rss/index.xml',
-      // 'https://www.wired.com/feed/rss' // Optional
+      "https://techcrunch.com/feed/",
+      "https://www.theverge.com/rss/index.xml",
+      // "https://www.wired.com/feed/rss" // optional
     ];
 
     for (const feedUrl of rssFeeds) {
       try {
         const feed = await parser.parseURL(feedUrl);
-        const rssArticles = feed.items.slice(0, 5).map(item => ({
+
+        const rssArticles = feed.items.slice(0, 5).map((item) => ({
           id: item.guid || item.link,
           title: item.title,
-          date: new Date(item.pubDate),
-          excerpt: item.contentSnippet || item.content,
-          image: item.enclosure?.url || 'https://images.unsplash.com/photo-1504384308090-c54be3855833?w=800&q=80', // Fallback image
+          date: new Date(item.pubDate || Date.now()),
+          excerpt:
+            item.contentSnippet || item.content || "No excerpt available",
+          image:
+            item.enclosure?.url ||
+            "https://images.unsplash.com/photo-1504384308090-c54be3855833?w=800&q=80",
           url: item.link,
           tags: item.categories || [],
-          author: item.creator || feed.title,
-          source: feed.title,
-          content: item.content || item.contentSnippet
+          author: item.creator || feed.title || "Unknown",
+          source: feed.title || "RSS Feed",
+          content: item.content || item.contentSnippet || "",
         }));
+
         allArticles.push(...rssArticles);
       } catch (err) {
         console.error(`Error fetching RSS feed ${feedUrl}:`, err.message);
       }
     }
 
-    // Remove duplicates
-    const uniqueArticles = Array.from(new Map(allArticles.map(item => [item.id, item])).values());
+    /* ---------------------------
+       3) Remove Duplicates
+       --------------------------- */
+    const uniqueArticles = Array.from(
+      new Map(allArticles.map((item) => [item.id, item])).values(),
+    );
 
-    // Sort by date (newest first)
+    /* ---------------------------
+       4) Sort by Newest
+       --------------------------- */
     uniqueArticles.sort((a, b) => b.date - a.date);
 
-    // Update Cache (Keep top 50)
-    cachedBlogs = uniqueArticles.slice(0, 50).map(article => ({
+    /* ---------------------------
+       5) Update Cache (Top 50)
+       --------------------------- */
+    cachedBlogs = uniqueArticles.slice(0, 50).map((article) => ({
       ...article,
-      date: article.date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      })
+      date: article.date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
     }));
 
     console.log(`Updated news cache with ${cachedBlogs.length} articles.`);
   } catch (error) {
-    console.error('Error in fetchTechNews:', error);
+    console.error("Error in fetchTechNews:", error.message);
   }
 };
 
-// Schedule Auto-Update (Every 1 hour)
-cron.schedule('0 * * * *', () => {
+/* ============================================================
+   ✅ CRON JOB (Auto update every 1 hour)
+   ============================================================ */
+cron.schedule("0 * * * *", () => {
   fetchTechNews();
 });
 
-// Initial Fetch
+/* ✅ Initial Fetch */
 fetchTechNews();
 
-// Blog Posts Endpoint (Returns Cached Data)
-app.get('/api/blogs', (req, res) => {
+/* ============================================================
+   ✅ BLOG ENDPOINTS
+   ============================================================ */
+
+// Return cached blogs
+app.get("/api/blogs", (req, res) => {
   res.json(cachedBlogs);
 });
 
-// Single Blog Post Endpoint
-app.get('/api/blogs/:id', async (req, res) => {
+// Return single blog
+app.get("/api/blogs/:id", async (req, res) => {
   const { id } = req.params;
-  
+
   // Check cache first
-  const cachedArticle = cachedBlogs.find(blog => blog.id === id || blog.id.toString() === id);
-  
+  const cachedArticle = cachedBlogs.find(
+    (blog) => blog.id === id || blog.id.toString() === id,
+  );
+
   if (cachedArticle) {
     return res.json(cachedArticle);
   }
 
-  // Fallback for Dev.to if not in cache (e.g. old link)
+  // Fallback for Dev.to article fetch
   if (!isNaN(id)) {
     try {
       const response = await fetch(`https://dev.to/api/articles/${id}`);
+
       if (!response.ok) {
-        return res.status(404).json({ error: 'Article not found' });
+        return res.status(404).json({ error: "Article not found" });
       }
+
       const article = await response.json();
+
       const blogDetail = {
         id: article.id.toString(),
         title: article.title,
-        date: new Date(article.published_at).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
+        date: new Date(article.published_at).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
         }),
         content: article.body_html || article.body_markdown,
         image: article.cover_image || article.social_image,
-        tags: article.tags,
-        author: article.user.name,
-        authorImage: article.user.profile_image,
-        url: article.url
+        tags: article.tag_list || [],
+        author: article.user?.name || "Unknown",
+        authorImage: article.user?.profile_image || "",
+        url: article.url,
       };
+
       return res.json(blogDetail);
     } catch (error) {
-      console.error(`Error fetching blog ${id}:`, error);
+      console.error(`Error fetching blog ${id}:`, error.message);
+      return res.status(500).json({ error: "Server error fetching article" });
     }
   }
 
-  res.status(404).json({ error: 'Article not found' });
+  return res.status(404).json({ error: "Article not found" });
 });
 
+/* ============================================================
+   ✅ START SERVER
+   ============================================================ */
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

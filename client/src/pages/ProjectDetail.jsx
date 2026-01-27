@@ -7,6 +7,40 @@ import Footer from '../components/Footer';
 
 const projects = [
   {
+    slug: "nagesh-pg",
+    title: "Nagesh PG",
+    category: "Property Management",
+    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80",
+    tech: ["React", "Node.js"],
+    liveUrl: "https://nageshpg.online",
+    overview:
+      "Modern co-living management software designed for seamless urban experiences. The platform streamlines PG operations, tenant management, payments, and maintenance requests.",
+    highlights: [
+      "Tenant management with easy onboarding and document storage",
+      "Automated payment tracking and reminders",
+      "Maintenance request system with real-time status updates",
+      "Room allocation and vacancy management",
+      "Generate reports and analytics for property owners"
+    ],
+  },
+  {
+    slug: "vedacurate",
+    title: "VedaCurate",
+    category: "Web Development",
+    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80",
+    tech: ["React", "Node.js", "3D Models"],
+    liveUrl: "https://vedacurate.com",
+    overview:
+      "Built a complete, responsive website using React.js for the frontend and Node.js for the backend. The project features modern UI design with integrated 3D models for an immersive user experience, fully deployed online using cloud hosting.",
+    highlights: [
+      "Modern UI design with responsive layout for all devices",
+      "Integrated 3D models for immersive user experience",
+      "Full-stack development with React and Node.js",
+      "Cloud deployment with high availability",
+      "Professional service platform for branding and design"
+    ],
+  },
+  {
     slug: "future-study-hub",
     title: "Future Study Hub",
     category: "Web Apps",

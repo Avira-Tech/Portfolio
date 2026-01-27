@@ -33,7 +33,10 @@ const Navbar = () => {
 
   const handleNavClick = (e, href) => {
     e.preventDefault();
-    if (location.pathname !== '/') {
+    // Check if it's an absolute path (starts with / but not #)
+    if (href.startsWith('/')) {
+      navigate(href);
+    } else if (location.pathname !== '/') {
       navigate(`/${href}`);
     } else {
       const element = document.querySelector(href);
@@ -51,6 +54,7 @@ const Navbar = () => {
     { name: 'About', href: '#about' },
     { name: 'Projects', href: '#projects' },
     { name: 'Services', href: '#different' },
+    // { name: 'Pricing', href: '/pricing'},
     { name: 'Contact', href: '#contact' },
   ];
 

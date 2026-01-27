@@ -6,7 +6,7 @@ const Logo = ({ className = '', size = 36 }) => {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <Link to="/" className={`flex items-center gap-3 ${className}`} aria-label="Avira Tech Home">
+    <Link to="#home" className={`flex items-center gap-3 ${className}`} aria-label="Avira Tech Home">
       {!imgError && (
         <img
           src={logo}

@@ -6,6 +6,9 @@ import BlogDetail from './pages/BlogDetail';
 import ProjectDetail from './pages/ProjectDetail';
 import DifferentDetail from './pages/DifferentDetail';
 import AboutDetail from './pages/AboutDetail';
+import ContactDetail from './pages/ContactDetail';
+// import PricingDetail from './pages/PricingDetail';
+import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 
 const AnimatedRoutes = () => {
@@ -19,7 +22,10 @@ const AnimatedRoutes = () => {
         <Route path="/projects/:slug" element={<ProjectDetail />} />
         <Route path="/why-we-are-different" element={<DifferentDetail />} />
         <Route path="/about" element={<AboutDetail />} />
+        <Route path="/contact" element={<ContactDetail />} />
+        {/* <Route path="/pricing" element={<PricingDetail />} /> */}
         <Route path="/blog/:id" element={<BlogDetail />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
   );
