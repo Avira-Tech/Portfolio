@@ -50,11 +50,12 @@ app.post("/api/contact", (req, res) => {
         secure: false,
         requireTLS: true,
         pool: true, // ✅ Use pooling for faster delivery
-        maxConnections: 5,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
+              tls: { rejectUnauthorized: false },
+
       });
 
       const clientMailOptions = {
@@ -95,6 +96,8 @@ app.post("/api/contact", (req, res) => {
         subject: `New Lead: ${subject}`,
         text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
       };
+
+          await transporter.verify();
 
       // Fire and forget
       await Promise.all([
