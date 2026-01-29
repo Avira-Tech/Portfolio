@@ -46,8 +46,9 @@ app.post("/api/contact", (req, res) => {
     try {
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || "smtp.zoho.in",
-        port: 465,
-        secure: true,
+        port: 587,
+        secure: false,
+        requireTLS: true,
         pool: true, // ✅ Use pooling for faster delivery
         maxConnections: 5,
         auth: {
