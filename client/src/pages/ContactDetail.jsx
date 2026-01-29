@@ -63,7 +63,7 @@ const ContactDetail = () => {
 
     try {
       // ✅ Update this URL to your hosted backend URL in production
-      const response = await fetch('https://portfolio-production-3b6e.up.railway.app/api/contact', {
+      const response = await fetch('https://portfolio-backend-3p35.onrender.com/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
