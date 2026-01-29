@@ -1,5 +1,6 @@
 import { motion, useInView, useSpring, useTransform } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const AnimatedNumber = ({ value }) => {
   const ref = useRef(null);
@@ -88,16 +89,15 @@ const About = () => {
               </p>
             </div>
             
-            <motion.a 
-              href="/about" 
-              whileHover={{ x: 5 }}
+            <Link 
+              to="/about" 
               className="inline-flex items-center gap-3 mt-10 text-primary font-bold text-lg group"
             >
               <span>Explore Our Journey</span>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="group-hover:translate-x-1 transition-transform">
                 <path d="M4.16663 10H15.8333M15.8333 10L10.8333 5M15.8333 10L10.8333 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-            </motion.a>
+            </Link>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

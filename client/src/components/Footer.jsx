@@ -14,14 +14,14 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: <X size={20} />, label: "Twitter", href: "#" },
+    { icon: <X size={20} />, label: "Twitter", href: "https://x.com/AviraTech2026" },
     { icon: <Linkedin size={20} />, label: "LinkedIn", href: "#" },
-    { icon: <Instagram size={20} />, label: "Instagram", href: "#" },
+    { icon: <Instagram size={20} />, label: "Instagram", href: "https://www.instagram.com/avira_tech" },
   ];
 
   const footerLinks = [
+    { name: "About", path: "/about" },
     { name: "Projects", path: "/projects" },
-    { name: "Blogs", path: "/blog/1" },
     { name: "Why We Are Different", path: "/why-we-are-different" },
     { name: "Contact", path: "/contact" },
   ];
@@ -54,7 +54,7 @@ const Footer = () => {
                 <div className="p-2 rounded-lg bg-white/5 group-hover:bg-primary/10 transition-colors">
                   <Mail size={18} />
                 </div>
-                <span className="text-sm font-medium">hello@aviratech.com</span>
+                <span className="text-sm font-medium">avira.tech@zohomail.in</span>
               </a>
               <div className="flex items-center gap-3 text-gray-400 cursor-default">
                 <div className="p-2 rounded-lg bg-white/5">
