@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(
   cors({
-    origin: ["https://aviratech.co.in"], // Update with your actual frontend URL
+    origin: ["https://aviratech.co.in", "http://localhost:5173"], // Update with your actual frontend URL
     methods: ["GET", "POST"],
   }),
 );
@@ -26,9 +26,6 @@ app.use("/assets", express.static(path.join(__dirname, "assets")));
 
 let cachedBlogs = [];
 
-/* ============================================================
-   ✅ CONTACT ENDPOINT
-   ============================================================ */
 /* ============================================================
    ✅ HIGH-SPEED CONTACT ENDPOINT
    ============================================================ */
@@ -59,34 +56,11 @@ app.post("/api/contact", (req, res) => {
         },
       });
 
-      // const clientMailOptions = {
-      //   from: process.env.EMAIL_USER,
-      //   to: email,
-      //   subject: `Inquiry Received: ${subject} - Avira Tech`,
-      //   html: `
-      //     <div style="font-family: sans-serif; max-width: 600px; color: #333;">
-      //       <h2 style="color: #2563eb;">Hello ${name},</h2>
-      //       <p>Thank you for reaching out to <strong>Avira Tech</strong>!</p>
-      //       <p>We've received your message regarding <b>"${subject}"</b>.</p>
-      //       <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
-      //         <img src="cid:aviratlogo" alt="Logo" style="width: 120px;"/>
-      //       </div>
-      //     </div>
-      //   `,
-      //   attachments: [
-      //     {
-      //       filename: "logo.png",
-      //       path: path.join(__dirname, "assets", "logo.png"),
-      //       cid: "aviratlogo",
-      //     },
-      //   ],
-      // };
-
-          const clientMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: `We've received your inquiry - Avira Tech`,
-      html: `
+      const clientMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: `We've received your inquiry - Avira Tech`,
+        html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; color: #333; line-height: 1.6;">
           <h2 style="color: #2563eb;">Hello ${name},</h2>
           <p>Thank you for reaching out to <strong>Avira Tech</strong>!</p>
@@ -103,15 +77,15 @@ app.post("/api/contact", (req, res) => {
           </div>
         </div>
       `,
-      // ✅ This attaches the logo and makes it usable in the HTML via "cid"
-      attachments: [
-        {
-          filename: "logo.png",
-          path: "./assets/logo.png", // Ensure this path points to your actual logo file
-          cid: "aviratlogo", // Must match the src="cid:aviratlogo" in HTML
-        },
-      ],
-    };
+        // ✅ This attaches the logo and makes it usable in the HTML via "cid"
+        attachments: [
+          {
+            filename: "logo.png",
+            path: "./assets/logo.png", // Ensure this path points to your actual logo file
+            cid: "aviratlogo", // Must match the src="cid:aviratlogo" in HTML
+          },
+        ],
+      };
 
       const adminMailOptions = {
         from: process.env.EMAIL_USER,
