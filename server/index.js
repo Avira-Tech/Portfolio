@@ -1,10 +1,10 @@
-// index.js
 const express = require("express");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const cron = require("node-cron");
 const Parser = require("rss-parser");
+const path = require("path"); // Added for file paths
 
 dotenv.config();
 
@@ -12,36 +12,77 @@ const app = express();
 const parser = new Parser();
 const PORT = process.env.PORT || 5000;
 
-// In-memory cache for blogs
-let cachedBlogs = [];
-
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://aviratech.co.in"], // Update with your actual frontend URL
+    methods: ["GET", "POST"],
+  }),
+);
 app.use(express.json());
 
-// Home Route
-app.get("/", (req, res) => {
-  res.send("Avira Tech API is running");
-});
+// Serve static assets (for the logo)
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+
+let cachedBlogs = [];
 
 /* ============================================================
-   ✅ UPDATED CONTACT ENDPOINT WITH LOGO ATTACHMENT
+   ✅ CONTACT ENDPOINT
    ============================================================ */
-app.post("/api/contact", async (req, res) => {
+/* ============================================================
+   ✅ HIGH-SPEED CONTACT ENDPOINT
+   ============================================================ */
+app.post("/api/contact", (req, res) => {
   const { name, email, subject, message } = req.body;
 
-  try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.zoho.in",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+  // 1. Immediate Validation
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
 
-    const clientMailOptions = {
+  // 2. Send SUCCESS response immediately to the frontend
+  // The user sees "Sent!" instantly while the server works in the background
+  res.status(200).json({ success: true, message: "Inquiry accepted" });
+
+  // 3. Process emails in the background (Non-blocking)
+  const sendBackgroundEmails = async () => {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || "smtp.zoho.in",
+        port: 465,
+        secure: true,
+        pool: true, // ✅ Use pooling for faster delivery
+        maxConnections: 5,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+      // const clientMailOptions = {
+      //   from: process.env.EMAIL_USER,
+      //   to: email,
+      //   subject: `Inquiry Received: ${subject} - Avira Tech`,
+      //   html: `
+      //     <div style="font-family: sans-serif; max-width: 600px; color: #333;">
+      //       <h2 style="color: #2563eb;">Hello ${name},</h2>
+      //       <p>Thank you for reaching out to <strong>Avira Tech</strong>!</p>
+      //       <p>We've received your message regarding <b>"${subject}"</b>.</p>
+      //       <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
+      //         <img src="cid:aviratlogo" alt="Logo" style="width: 120px;"/>
+      //       </div>
+      //     </div>
+      //   `,
+      //   attachments: [
+      //     {
+      //       filename: "logo.png",
+      //       path: path.join(__dirname, "assets", "logo.png"),
+      //       cid: "aviratlogo",
+      //     },
+      //   ],
+      // };
+
+          const clientMailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: `We've received your inquiry - Avira Tech`,
@@ -50,7 +91,7 @@ app.post("/api/contact", async (req, res) => {
           <h2 style="color: #2563eb;">Hello ${name},</h2>
           <p>Thank you for reaching out to <strong>Avira Tech</strong>!</p>
           <p>We've received your message regarding <b>"${subject}"</b>. Our team will review your request and get back to you shortly.</p>
-          
+
           <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
             <p style="margin-bottom: 5px; font-weight: bold;">Best Regards,</p>
             <p style="font-size: 14px; color: #666; margin: 0;">
@@ -72,25 +113,31 @@ app.post("/api/contact", async (req, res) => {
       ],
     };
 
-    const adminMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
-      replyTo: email,
-      subject: `New Lead: ${subject}`,
-      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
-    };
+      const adminMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+        replyTo: email,
+        subject: `New Lead: ${subject}`,
+        text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+      };
 
-    await Promise.all([
-      transporter.sendMail(adminMailOptions),
-      transporter.sendMail(clientMailOptions),
-    ]);
+      // Fire and forget
+      await Promise.all([
+        transporter.sendMail(adminMailOptions),
+        transporter.sendMail(clientMailOptions),
+      ]);
 
-    res.status(200).json({ message: "Success" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
+      console.log(`✅ Emails sent successfully for ${name}`);
+      transporter.close(); // Close pool
+    } catch (error) {
+      console.error("❌ Background Mail Error:", error);
+    }
+  };
+
+  // Execute the async function without 'await' so the route finishes instantly
+  sendBackgroundEmails();
 });
+
 /* ============================================================
    ✅ FETCH TECH NEWS FUNCTION (Dev.to + RSS)
    ============================================================ */
@@ -194,7 +241,7 @@ const fetchTechNews = async () => {
   } catch (error) {
     console.error("Error in fetchTechNews:", error.message);
   }
-};
+}; // app
 
 /* ============================================================
    ✅ CRON JOB (Auto update every 1 hour)
@@ -268,7 +315,4 @@ app.get("/api/blogs/:id", async (req, res) => {
 /* ============================================================
    ✅ START SERVER
    ============================================================ */
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

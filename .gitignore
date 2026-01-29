@@ -73,6 +73,11 @@ server/.env
 .env.*
 !.env.example
 
+# Client environment files
+client/.env
+client/.env.*
+!client/.env.example
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache

@@ -29,7 +29,7 @@ const Contact = () => {
     setStatus("submitting");
 
     try {
-      const response = await fetch("http://localhost:5000/api/contact", {
+      const response = await fetch("https://portfolio-production-3b6e.up.railway.app/api/contact", {
         // e.g., 'https://api.avira.tech/contact'
         method: "POST",
         headers: {
