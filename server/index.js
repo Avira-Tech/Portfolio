@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(
   cors({
-    origin: ["https://aviratech.co.in"], // Update with your actual frontend URL
+    origin: ["https://aviratech.co.in", "http://localhost:5173"], // Update with your actual frontend URL
     methods: ["GET", "POST"],
   }),
 );
