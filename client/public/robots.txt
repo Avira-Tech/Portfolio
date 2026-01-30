@@ -7,18 +7,12 @@ Allow: /
 # Sitemap location
 Sitemap: https://aviratech.co.in/sitemap.xml
 
-# Crawl-delay (optional)
-Crawl-delay: 10
-
 # Disallow admin/private pages (if any)
 Disallow: /api/
 Disallow: /admin/
 Disallow: /private/
 Disallow: /_next/
 Disallow: /static/
-
-# Host preference
-Host: https://aviratech.co.in
 
 # Clean URLs - prevent duplicate content
 Disallow: /*.json$
