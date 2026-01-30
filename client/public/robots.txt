@@ -14,7 +14,13 @@ Crawl-delay: 10
 Disallow: /api/
 Disallow: /admin/
 Disallow: /private/
+Disallow: /_next/
+Disallow: /static/
 
 # Host preference
 Host: https://aviratech.co.in
+
+# Clean URLs - prevent duplicate content
+Disallow: /*.json$
+Disallow: /*.xml$
 

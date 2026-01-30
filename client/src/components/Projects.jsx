@@ -15,7 +15,7 @@ const projects = [
   },
   {
     id: 2,
-    title: "KrushiMitra – Assured Contract Farming",
+    title: "KrushiMitra - Assured Contract Farming",
     category: "AgriTech",
     image: "https://wallpapers.com/images/hd/green-technology-1000-x-667-wallpaper-qc11crajs1d8bs3z.jpg",
     tech: ["React", "Node.js", "Razorpay", "Twilio", "AGMARKNET API", "GPS"],

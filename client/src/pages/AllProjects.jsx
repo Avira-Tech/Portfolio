@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { ArrowLeft, LayoutGrid, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ProjectCard from '../components/ProjectCard';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 
 const allProjects = [
   {
@@ -39,7 +40,7 @@ const allProjects = [
   },
   {
     id: 4,
-    title: "KrushiMitra – Assured Contract Farming",
+    title: "KrushiMitra - Assured Contract Farming",
     category: "AgriTech",
     image: "https://wallpapers.com/images/hd/green-technology-1000-x-667-wallpaper-qc11crajs1d8bs3z.jpg",
     tech: ["React", "Node.js", "Razorpay", "Twilio", "AGMARKNET API", "GPS"],
@@ -74,6 +75,12 @@ const categories = ["All", ...new Set(allProjects.map(p => p.category))];
 
 const AllProjects = () => {
   const [activeCategory, setActiveCategory] = useState("All");
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   const filteredProjects = activeCategory === "All" 
     ? allProjects 
@@ -86,6 +93,19 @@ const AllProjects = () => {
       exit={{ opacity: 0 }}
       className="bg-[#0a0a0a] min-h-screen text-white selection:bg-primary/30"
     >
+      {/* Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-blue-500 to-primary z-[100] origin-left"
+        style={{ scaleX }}
+      />
+
+      <SEO 
+        title="Our Portfolio"
+        description="Explore Avira Tech's portfolio of stunning websites, web applications, and digital solutions. View our latest projects in web development, e-commerce, and custom web applications."
+        keywords="portfolio, web development portfolio, website portfolio, project showcase, web applications, ecommerce websites, react projects, node.js projects"
+        url="https://aviratech.co.in/projects"
+      />
+      
       <Navbar />
       
       {/* Dynamic Background */}

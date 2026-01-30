@@ -1,8 +1,9 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { ArrowLeft, Shield, Zap, Code, Users, CheckCircle2, Sparkles, Binary, Layout } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import SEO from "../components/SEO";
 
 const sections = [
   {
@@ -44,6 +45,13 @@ const sections = [
 ];
 
 const DifferentDetail = () => {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -51,6 +59,19 @@ const DifferentDetail = () => {
       exit={{ opacity: 0 }}
       className="bg-[#050505] min-h-screen text-white selection:bg-primary/30"
     >
+      {/* Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-blue-500 to-primary z-[100] origin-left"
+        style={{ scaleX }}
+      />
+
+      <SEO
+        title="Why We Are Different"
+        description="Discover what sets Avira Tech apart from other web development agencies. Learn about our client-first approach, performance optimization, clean engineering practices, and secure-by-design methodology."
+        keywords="why choose us, web development difference, client first approach, performance optimization, clean code, secure web development, professional web agency"
+        url="https://aviratech.co.in/why-we-are-different"
+      />
+      
       <Navbar />
       
       {/* Dynamic Background */}

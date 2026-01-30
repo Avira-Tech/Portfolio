@@ -1,8 +1,9 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowLeft, Target, Rocket, Zap, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 
 const sections = [
   {
@@ -28,6 +29,13 @@ const sections = [
 ];
 
 const AboutDetail = () => {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -35,6 +43,19 @@ const AboutDetail = () => {
       exit={{ opacity: 0 }}
       className="bg-[#0a0a0a] min-h-screen text-white selection:bg-primary/30"
     >
+      {/* Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-blue-500 to-primary z-[100] origin-left"
+        style={{ scaleX }}
+      />
+
+      <SEO 
+        title="About Us"
+        description="Learn about Avira Tech - a professional web development agency specializing in portfolios, business websites, and full-stack development. Discover our journey, values, and commitment to excellence."
+        keywords="about us, avira tech, web development company, software development agency, digital agency, tech company, web design company, about web developers"
+        url="https://aviratech.co.in/about"
+      />
+      
       <Navbar />
       
       {/* Decorative Background Elements */}

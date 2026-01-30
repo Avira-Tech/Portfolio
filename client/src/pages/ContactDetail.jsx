@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { Send, CheckCircle, Mail, MapPin, Phone, MessageCircle, HelpCircle, ChevronDown, Sparkles } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 
 const contactInfo = [
   {
@@ -56,6 +57,12 @@ const ContactDetail = () => {
   const [status, setStatus] = useState('idle');
   const [focused, setFocused] = useState(null);
   const [openFaq, setOpenFaq] = useState(null);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,6 +100,19 @@ const ContactDetail = () => {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       className="bg-[#080808] min-h-screen text-white selection:bg-primary/30"
     >
+      {/* Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-blue-500 to-primary z-[100] origin-left"
+        style={{ scaleX }}
+      />
+
+      <SEO 
+        title="Contact Us"
+        description="Get in touch with Avira Tech for professional web development services. Contact us for web design, development, SEO, and digital solutions. We respond within 24 hours."
+        keywords="contact avira tech, web development contact, hire web developers, get quote, web design inquiry, contact form, web development services"
+        url="https://aviratech.co.in/contact"
+      />
+      
       <Navbar />
       
       <div className="fixed inset-0 overflow-hidden pointer-events-none">

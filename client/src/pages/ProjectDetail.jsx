@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 
 const projects = [
   {
@@ -58,7 +59,7 @@ const projects = [
   },
   {
     slug: "krushimitra-contract-farming",
-    title: "KrushiMitra – Assured Contract Farming",
+    title: "KrushiMitra - Assured Contract Farming",
     category: "AgriTech",
     image: "https://wallpapers.com/images/hd/green-technology-1000-x-667-wallpaper-qc11crajs1d8bs3z.jpg",
     tech: ["React", "Node.js", "Razorpay", "Twilio", "AGMARKNET API", "GPS"],
@@ -68,7 +69,7 @@ const projects = [
     highlights: [
       "Verified authentication and transparent contract negotiations",
       "AGMARKNET API for live crop price tracking",
-      "GPS‑based proximity filters for localized trading (30–50 km)",
+      "GPS‑based proximity filters for localized trading (30-50 km)",
       "Razorpay payments with GST receipts and inventory management",
       "In‑app chat, calls, AI assistant, and Porter API logistics"
     ],
@@ -111,6 +112,12 @@ const projects = [
 const ProjectDetail = () => {
   const { slug } = useParams();
   const project = useMemo(() => projects.find(p => p.slug === slug), [slug]);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   if (!project) {
     return (
@@ -132,6 +139,20 @@ const ProjectDetail = () => {
       exit={{ opacity: 0 }}
       className="bg-dark min-h-screen text-white"
     >
+      {/* Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-blue-500 to-primary z-[100] origin-left"
+        style={{ scaleX }}
+      />
+
+      <SEO 
+        title={`${project.title} - Portfolio Project`}
+        description={project.overview}
+        keywords={`${project.title}, ${project.category}, ${project.tech.join(', ')}, portfolio project, web development`}
+        url={`https://aviratech.co.in/projects/${project.slug}`}
+        image={project.image}
+      />
+      
       <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-6 max-w-5xl">

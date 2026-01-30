@@ -1,15 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { ArrowLeft, Calendar, User, Tag, Clock } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 
 const BlogDetail = () => {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     const fetchBlogDetail = async () => {
@@ -57,6 +64,21 @@ const BlogDetail = () => {
       exit={{ opacity: 0 }}
       className="bg-dark min-h-screen text-white"
     >
+      {/* Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-blue-500 to-primary z-[100] origin-left"
+        style={{ scaleX }}
+      />
+
+      <SEO 
+        title={blog.title}
+        description={blog.excerpt || blog.title}
+        keywords={blog.tags ? blog.tags.join(', ') : 'blog, articles, web development'}
+        url={`https://aviratech.co.in/blog/${blog.id}`}
+        image={blog.image}
+        type="article"
+      />
+      
       <Navbar />
       
       <main className="pt-24 pb-20">
