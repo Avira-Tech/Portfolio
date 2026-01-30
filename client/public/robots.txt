@@ -22,5 +22,4 @@ Host: https://aviratech.co.in
 
 # Clean URLs - prevent duplicate content
 Disallow: /*.json$
-Disallow: /*.xml$
 
